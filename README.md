@@ -4,7 +4,7 @@
 ## 📌 Visão Geral
 
 Este projeto faz parte de um **desafio interno promovido pela NTT Data**, dentro da trilha **Python Intermediate**.
-A descrição completa do desafio pode ser consultada no arquivo [desafio.md](desafio.md).
+A descrição completa do desafio pode ser consultada no arquivo [desafio.md](./docs/desafio.md).
 
 A solução foi dividida em **duas aplicações independentes**:
 
@@ -22,8 +22,7 @@ O objetivo principal do projeto é automatizar o processamento dos arquivos de *
 ### Etapas do processamento
 
 1. Ler o arquivo de cotação histórica em formato TXT
-2. Estruturar os dados conforme o layout descrito no documento
-   [SeriesHistoricas_Layout.pdf](SeriesHistoricas_Layout.pdf)
+2. Estruturar os dados conforme o layout descrito no documento[SeriesHistoricas_Layout.pdf](./docs/SeriesHistoricas_Layout.pdf)
 3. Persistir os dados tratados em um banco de dados **MySQL**
 
 ---
