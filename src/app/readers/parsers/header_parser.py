@@ -1,5 +1,5 @@
 from loguru import logger
-from app.infra.readers.base_parser import BaseParser
+from app.readers.base_parser import BaseParser
 
 
 class Header(BaseParser):

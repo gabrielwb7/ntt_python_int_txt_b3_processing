@@ -1,5 +1,5 @@
 import pytest
-from app.infra.readers.parsers.header_parser import Header
+from app.readers.parsers.trailer_parser import Trailer
 
 
 class FakeBaseParser:
@@ -7,21 +7,21 @@ class FakeBaseParser:
         return txt[inicio : fim + 1].strip()
 
 
-class TestHeaderParser(Header, FakeBaseParser):
+class TestTrailerParser(Trailer, FakeBaseParser):
     pass
 
 
-def test_header_valido():
-    txt = "00COTAHIST.2025BOVESPA 20251230"
+def test_trailer_valido():
+    txt = "99COTAHIST.2025BOVESPA 20251230"
 
-    parser = TestHeaderParser()
+    parser = TestTrailerParser()
     try:
         parser.parser(txt)
     except Exception as e:
         pytest.fail(f"Exception inesperada: {e}")
 
 
-def test_header_tipo_registro_invalido():
+def test_trailer_tipo_registro_invalido():
     txt = (
         "01"
         "COTAHIST.2023"
@@ -30,13 +30,13 @@ def test_header_tipo_registro_invalido():
         + " " * 214
     )
 
-    parser = TestHeaderParser()
+    parser = TestTrailerParser()
 
-    with pytest.raises(ValueError, match="Header da cotacao invalida"):
+    with pytest.raises(ValueError, match="trailer da cotacao invalida"):
         parser.parser(txt)
 
 
-def test_header_origem_invalida():
+def test_trailer_origem_invalida():
     txt = (
         "00"
         "COTAHIST.2023"
@@ -45,13 +45,13 @@ def test_header_origem_invalida():
         + " " * 214
     )
 
-    parser = TestHeaderParser()
+    parser = TestTrailerParser()
 
     with pytest.raises(ValueError):
         parser.parser(txt)
 
 
-def test_header_nome_arquivo_invalido():
+def test_trailer_nome_arquivo_invalido():
     txt = (
         "00"
         "OUTROARQ.2023"
@@ -60,7 +60,7 @@ def test_header_nome_arquivo_invalido():
         + " " * 214
     )
 
-    parser = TestHeaderParser()
+    parser = TestTrailerParser()
 
     with pytest.raises(ValueError):
         parser.parser(txt)
