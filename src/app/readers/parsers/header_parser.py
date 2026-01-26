@@ -25,6 +25,4 @@ class Header(BaseParser):
         nome_arquivo_valido = nome_arquivo.startswith("COTAHIST")
         origem_valida = origem == "BOVESPA"
 
-        print(f"{tipo_registro}-{nome_arquivo}-{origem}")
-
         return tipo_registro_valido and origem_valida and nome_arquivo_valido
