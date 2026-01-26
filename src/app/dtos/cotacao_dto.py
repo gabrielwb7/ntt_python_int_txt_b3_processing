@@ -31,7 +31,7 @@ class CotacaoDto:
         preco_exercicio_opcao_ref_dolar: Decimal,
         codigo_isin: str,
         distribuicao_papel: int
-    ) {
+    ): 
         self.data_pregrao = data_pregrao
         self.cod_bdi = cod_bdi
         self.cod_negociacao = cod_negociacao
@@ -57,4 +57,7 @@ class CotacaoDto:
         self.preco_exercicio_opcao_ref_dolar = preco_exercicio_opcao_ref_dolar
         self.codigo_isin = codigo_isin
         self.distribuicao_papel = distribuicao_papel    
-    }
+
+    def __str__(self):
+        return f"CotacaoDto(data_pregrao={self.data_pregrao}, cod_bdi={self.cod_bdi}, cod_negociacao={self.cod_negociacao}, tipo_mercado={self.tipo_mercado}, nome_resumido={self.nome_resumido}, especificacao_papel={self.especificacao_papel}, prazo_em_dias={self.prazo_em_dias}, moeda_ref={self.moeda_ref}, preco_abertura_pregao={self.preco_abertura_pregao}, preco_maximo_pregao={self.preco_maximo_pregao}, preco_minimo_pregao={self.preco_minimo_pregao}, preco_medio_pregao={self.preco_medio_pregao}, preco_ultimo_negociacao_pregao={self.preco_ultimo_negociacao_pregao}, preco_melhor_oferta_compra={self.preco_melhor_oferta_compra}, preco_melhor_oferta_venda={self.preco_melhor_oferta_venda}, total_negocios_pregao={self.total_negocios_pregao}, quantidade_total_titulos_negociados={self.quantidade_total_titulos_negociados}, volume_total_titulos_negociados={self.volume_total_titulos_negociados}, preco_exercicio={self.preco_exercicio}, indicador_correcao_preco_exercicio={self.indicador_correcao_preco_exercicio}, data_vencimento={self.data_vencimento}, fator_cotacao={self.fator_cotacao}, preco_exercicio_opcao_ref_dolar={self.preco_exercicio_opcao_ref_dolar}, codigo_isin={self.codigo_isin}, distribuicao_papel={self.distribuicao_papel})"
+    

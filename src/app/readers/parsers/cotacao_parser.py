@@ -1,18 +1,18 @@
 from loguru import logger
-from datetime import date
+from datetime import datetime, date
 from decimal import Decimal
-from app.readers.base_parser import BaseParser
-from app.dtos.cotacao_dto import CotacaoDTO
+from readers.base_parser import BaseParser
+from dtos.cotacao_dto import CotacaoDto
 
 
 class Cotacao(BaseParser):
 
-    def parser(self, txt) -> CotacaoDTO:
+    def parser(self, txt) -> CotacaoDto:
         tipo_registro = self._extrair(txt, 0, 2)
 
         valido = self._validar(tipo_registro)
 
-        if not valido: 
+        if not valido:
             logger.error("Tipo de registro cotacao invalido")
             raise ValueError("Tipo de registro cotacao invalido")
 
@@ -36,19 +36,23 @@ class Cotacao(BaseParser):
         volume_total_titulos_negociados = Decimal(self._extrair(txt, 170, 188)) / 100
         preco_exercicio = Decimal(self._extrair(txt, 188, 201)) / 100
         indicador_correcao_preco_exercicio = int(self._extrair(txt, 201, 202))
-        data_vencimento = datetime.strptime(self._extrair(txt, 202, 210), "%Y%m%d").date()
+        data_vencimento = datetime.strptime(
+            self._extrair(txt, 202, 210), "%Y%m%d"
+        ).date()
         fator_cotacao = int(self._extrair(txt, 210, 217))
-        preco_exercicio_opcao_ref_dolar = Decimal(self._extrair(txt, 218, 230)) / Decimal("1000000")
+        preco_exercicio_opcao_ref_dolar = Decimal(
+            self._extrair(txt, 218, 230)
+        ) / Decimal("1000000")
         codigo_isin = self._extrair(txt, 230, 242).strip()
         distribuicao_papel = int(self._extrair(txt, 242, 245))
 
-        return CotacaoDTO(
+        return CotacaoDto(
             data_pregrao,
             codbdi,
             cod_negociacao,
             tipo_mercado,
             nome_resumido,
-            especificacao_papel,    
+            especificacao_papel,
             prazo_em_dias,
             moeda_ref,
             preco_abertura_pregao,
@@ -67,12 +71,8 @@ class Cotacao(BaseParser):
             fator_cotacao,
             preco_exercicio_opcao_ref_dolar,
             codigo_isin,
-            distribuicao_papel
+            distribuicao_papel,
         )
 
-        
-
-
-    
     def _validar(self, tipo_registro: str) -> bool:
         return tipo_registro == "01"
