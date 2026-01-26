@@ -1,3 +1,7 @@
+from datetime import date
+from decimal import Decimal
+
+
 class CotacaoDto:
     
     def __init__(
