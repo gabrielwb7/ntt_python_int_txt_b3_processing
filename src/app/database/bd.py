@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine.url import URL
 
 
-DATABASE_URL = "mysql+pymysql://root:ntt_projeto@localhost:3306/ntt_projeto"
+DATABASE_URL = "mysql+pymysql://root:ntt_projeto@localhost:3307/ntt_projeto"
 
 engine = create_engine(
     DATABASE_URL,
