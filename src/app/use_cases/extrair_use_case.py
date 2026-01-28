@@ -15,13 +15,16 @@ arquivo = BASE_DIR / "data" / "raw" / "COTAHIST_A2025.TXT"
 cotacao_model.Base.metadata.create_all(bind=engine)
 
 
-def salvar_cotacao(db: Session, cotacao_dto: CotacaoDto) -> None:
-    cotacao_model = cotacao_dto.para_cotacao_model()
-    db.add(cotacao_model)
-
-
-def processar_cotacoes(batch=1000) -> None:
-    buffer = 0
+def processar_cotacoes(batch_size: int = 1000) -> None:
+    """Processa cotações com otimização de batch para melhor performance."""
+    logger.info("Iniciando o processamento de cotações...")
+    
+    header = Header()
+    trailer = Trailer()
+    cotacao = Cotacao()
+    
+    cotacoes_buffer = []
+    total_processado = 0
 
     with SessionLocal() as db:
         with arquivo.open("r") as file:
@@ -29,24 +32,29 @@ def processar_cotacoes(batch=1000) -> None:
                 tipo_registro = line[0:2]
 
                 if tipo_registro == "00":
-                    header = Header()
                     header_data = header.parser(line)
-                    logger.info(f"Header Processado: {header_data}")
 
                 elif tipo_registro == "01":
-                    cotacao = Cotacao()
                     cotacao_data = cotacao.parser(line)
-                    salvar_cotacao(db, cotacao_data)
-                    buffer += 1
-
-                    if buffer >= batch:
+                    cotacao_model = cotacao_data.para_cotacao_model()
+                    cotacoes_buffer.append(cotacao_model)
+                    
+                    # Commit em lotes para melhor performance
+                    if len(cotacoes_buffer) >= batch_size:
+                        db.bulk_save_objects(cotacoes_buffer)
                         db.commit()
-                        buffer = 0
-
-                    logger.info(f"Cotacao Processada: {cotacao_data}")
+                        total_processado += len(cotacoes_buffer)
+                        logger.info(f"Processados {total_processado} registros...")
+                        cotacoes_buffer = []
 
                 elif tipo_registro == "99":
-                    trailer = Trailer()
                     trailer_data = trailer.parser(line)
-                    logger.info(f"Trailer Processado: {trailer_data}")
-    db.commit()
+        
+        # Commit dos registros restantes
+        if cotacoes_buffer:
+            db.bulk_save_objects(cotacoes_buffer)
+            db.commit()
+            total_processado += len(cotacoes_buffer)
+            logger.info(f"Processados {total_processado} registros...")
+
+    logger.info(f"Processamento de cotações concluído. Total: {total_processado} registros.")

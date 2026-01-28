@@ -13,7 +13,7 @@ class Header(BaseParser):
         valido = self._validar(tipo_registro, nome_arquivo, origem)
 
         if not valido: 
-            logger.error("Erro ao validar campos do header do txt da cotacao")
+            # logger.error("Erro ao validar campos do header do txt da cotacao")
             raise ValueError("Header da cotacao invalida")
         
         logger.info(f"header validado com sucesso, cotacao {nome_arquivo} gerada na data {data_geracao}")

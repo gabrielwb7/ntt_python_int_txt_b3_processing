@@ -13,7 +13,7 @@ class Trailer(BaseParser):
         valido = self._validar(tipo_registro, nome_arquivo, origem)
 
         if not valido: 
-            logger.error("Erro ao validar campos do trailer do txt da cotacao")
+            # logger.error("Erro ao validar campos do trailer do txt da cotacao")
             raise ValueError("trailer da cotacao invalida")
         
         logger.info(f"trailer validado com sucesso, cotacao {nome_arquivo} gerada na data {data_geracao}")

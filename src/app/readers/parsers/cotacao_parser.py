@@ -13,7 +13,7 @@ class Cotacao(BaseParser):
         valido = self._validar(tipo_registro)
 
         if not valido:
-            logger.error("Tipo de registro cotacao invalido")
+            # logger.error("Tipo de registro cotacao invalido")
             raise ValueError("Tipo de registro cotacao invalido")
 
         data_pregrao = datetime.strptime(self._extrair(txt, 2, 10), "%Y%m%d").date()
