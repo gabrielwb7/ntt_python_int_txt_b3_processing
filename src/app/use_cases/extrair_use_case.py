@@ -14,7 +14,6 @@ arquivo = BASE_DIR / "data" / "raw" / "COTAHIST_A2025.TXT"
 
 cotacao_model.Base.metadata.create_all(bind=engine)
 
-
 def processar_cotacoes(batch_size: int = 1000) -> None:
     """Processa cotações com otimização de batch para melhor performance."""
     logger.info("Iniciando o processamento de cotações...")
@@ -26,6 +25,8 @@ def processar_cotacoes(batch_size: int = 1000) -> None:
     cotacoes_buffer = []
     total_processado = 0
 
+    TIPO_MERCADO = 10  # Exemplo de filtro para tipo de mercado
+
     with SessionLocal() as db:
         with arquivo.open("r") as file:
             for line in file:
@@ -36,16 +37,17 @@ def processar_cotacoes(batch_size: int = 1000) -> None:
 
                 elif tipo_registro == "01":
                     cotacao_data = cotacao.parser(line)
-                    cotacao_model = cotacao_data.para_cotacao_model()
-                    cotacoes_buffer.append(cotacao_model)
-                    
-                    # Commit em lotes para melhor performance
-                    if len(cotacoes_buffer) >= batch_size:
-                        db.bulk_save_objects(cotacoes_buffer)
-                        db.commit()
-                        total_processado += len(cotacoes_buffer)
-                        logger.info(f"Processados {total_processado} registros...")
-                        cotacoes_buffer = []
+                    if TIPO_MERCADO == cotacao_data.tipo_mercado:
+                        cotacao_model = cotacao_data.para_cotacao_model()
+                        cotacoes_buffer.append(cotacao_model)
+                        
+                        # Commit em lotes para melhor performance
+                        if len(cotacoes_buffer) >= batch_size:
+                            db.bulk_save_objects(cotacoes_buffer)
+                            db.commit()
+                            total_processado += len(cotacoes_buffer)
+                            logger.info(f"Processados {total_processado} registros...")
+                            cotacoes_buffer = []
 
                 elif tipo_registro == "99":
                     trailer_data = trailer.parser(line)
